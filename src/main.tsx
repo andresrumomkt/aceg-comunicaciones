@@ -6,10 +6,10 @@ import { articles, categories, contact, industries, portfolio, products } from '
 import dealers from './data/dealers.json';
 import { HeroVideo } from './components/HeroVideo';
 import { heroVideo } from './data/media';
+import { asset, siteUrl } from './site';
 import './styles.css';
 import './hero-video.css';
 
-const asset = (name: string) => `/assets/${name}`;
 const iconSet = [ShieldCheck, HardHat, Factory, Zap, Factory, Truck, HeartPulse, Users];
 const normalize = (text: string) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const provinces = [...new Set(dealers.map(d => d.province))].sort((a, b) => a.localeCompare(b, 'es'));
@@ -227,7 +227,8 @@ function NotFound() {
   return <section className="section not-found container"><Eyebrow>404 · Conexión por encontrar</Eyebrow><h1>Busquemos<br />otra conexión.</h1><p>La página que buscás no está disponible. Podés volver al inicio o explorar nuestras soluciones.</p><Action to="/">Volver al inicio</Action><TextLink to="/productos">Explorar productos</TextLink></section>;
 }
 function PageEffects() {
-  const { pathname, hash } = useLocation();
+  const { pathname: rawPathname, hash } = useLocation();
+  const pathname = rawPathname.replace(/\/+$/, '') || '/';
   useEffect(() => {
     if (hash) { requestAnimationFrame(() => document.getElementById(hash.slice(1))?.scrollIntoView()); } else window.scrollTo(0, 0);
     const product = products.find(p => pathname.endsWith(`/${p.slug}`));
@@ -242,12 +243,14 @@ function PageEffects() {
     document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
     let schema = document.getElementById('page-schema');
     if (!schema) { schema = document.createElement('script'); schema.id = 'page-schema'; schema.setAttribute('type', 'application/ld+json'); document.head.appendChild(schema); }
-    schema.textContent = JSON.stringify(product ? { '@context': 'https://schema.org', '@type': 'Product', name: product.name, description: product.description, image: `https://aceg-comunicaciones-nueva-web.golditem8.chatgpt.site${asset(product.image)}`, brand: { '@type': 'Brand', name: 'Motorola Solutions' } } : { '@context': 'https://schema.org', '@type': 'Organization', name: 'ACEG Comunicaciones S.A.', url: 'https://aceg-comunicaciones-nueva-web.golditem8.chatgpt.site', telephone: '+541147010985', email: contact.email, address: { '@type': 'PostalAddress', streetAddress: 'Av. del Libertador 8156', addressLocality: 'Buenos Aires', addressCountry: 'AR' } });
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', new URL(pathname.slice(1), siteUrl).href);
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', new URL(pathname.slice(1), siteUrl).href);
+    schema.textContent = JSON.stringify(product ? { '@context': 'https://schema.org', '@type': 'Product', name: product.name, description: product.description, image: new URL(asset(product.image), window.location.origin).href, brand: { '@type': 'Brand', name: 'Motorola Solutions' } } : { '@context': 'https://schema.org', '@type': 'Organization', name: 'ACEG Comunicaciones S.A.', url: siteUrl, telephone: '+541147010985', email: contact.email, address: { '@type': 'PostalAddress', streetAddress: 'Av. del Libertador 8156', addressLocality: 'Buenos Aires', addressCountry: 'AR' } });
   }, [pathname, hash]);
   return null;
 }
 function App() {
-  return <BrowserRouter><PageEffects /><Header /><main id="contenido"><Routes><Route path="/" element={<Home />} /><Route path="/productos" element={<ProductsPage />} /><Route path="/productos/:category" element={<ProductsPage />} /><Route path="/productos/:category/:slug" element={<ProductDetail />} /><Route path="/soluciones" element={<SolutionsPage />} /><Route path="/industrias" element={<IndustriesPage />} /><Route path="/industrias/:slug" element={<IndustryPage />} /><Route path="/dealers" element={<DealersPage />} /><Route path="/nosotros" element={<AboutPage />} /><Route path="/novedades" element={<><PageIntro eyebrow="Perspectivas ACEG" title="Ideas que conectan.">Una mirada sobre tecnología, ingeniería y las decisiones que ayudan a operar mejor.</PageIntro><ArticlesSection full /><ClosingCTA /></>} /><Route path="/novedades/:slug" element={<ArticlePage />} /><Route path="/contacto" element={<ContactPage />} /><Route path="/privacidad" element={<PrivacyPage />} /><Route path="*" element={<NotFound />} /></Routes></main><Footer /><Link className="floating-contact" to="/contacto" title="Hablemos de tu proyecto" aria-label="Contactar a ACEG"><MessageCircle size={23} /></Link></BrowserRouter>;
+  return <BrowserRouter basename={import.meta.env.BASE_URL}><PageEffects /><Header /><main id="contenido"><Routes><Route path="/" element={<Home />} /><Route path="/productos" element={<ProductsPage />} /><Route path="/productos/:category" element={<ProductsPage />} /><Route path="/productos/:category/:slug" element={<ProductDetail />} /><Route path="/soluciones" element={<SolutionsPage />} /><Route path="/industrias" element={<IndustriesPage />} /><Route path="/industrias/:slug" element={<IndustryPage />} /><Route path="/dealers" element={<DealersPage />} /><Route path="/nosotros" element={<AboutPage />} /><Route path="/novedades" element={<><PageIntro eyebrow="Perspectivas ACEG" title="Ideas que conectan.">Una mirada sobre tecnología, ingeniería y las decisiones que ayudan a operar mejor.</PageIntro><ArticlesSection full /><ClosingCTA /></>} /><Route path="/novedades/:slug" element={<ArticlePage />} /><Route path="/contacto" element={<ContactPage />} /><Route path="/privacidad" element={<PrivacyPage />} /><Route path="*" element={<NotFound />} /></Routes></main><Footer /><Link className="floating-contact" to="/contacto" title="Hablemos de tu proyecto" aria-label="Contactar a ACEG"><MessageCircle size={23} /></Link></BrowserRouter>;
 }
 
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);

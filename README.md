@@ -6,6 +6,19 @@ Propuesta navegable de renovacion. React, TypeScript, Vite y Lucide.
 
 `pnpm install`, `pnpm dev`, `pnpm build`.
 
+## GitHub Pages
+
+El workflow `.github/workflows/pages.yml` publica `main` automaticamente.
+En el repositorio, configurar Settings > Pages > Source: GitHub Actions.
+No requiere claves de despliegue ni tokens personales en el codigo.
+El workflow obtiene la URL y el prefijo del repositorio desde GitHub Pages.
+
+Para probar una publicacion bajo un subdirectorio:
+`BASE_PATH=/aceg/ SITE_URL=https://usuario.github.io/aceg/ pnpm build`.
+`pnpm test` verifica las entradas HTML, sitemap y metadatos para dominio propio
+y repositorio. El build genera una entrada por ruta, mas `404.html`.
+La configuracion local por defecto conserva la vista privada de Sites.
+
 ## Contenido
 
 Productos, industrias, portfolio y perspectivas: `src/data/content.ts`.
