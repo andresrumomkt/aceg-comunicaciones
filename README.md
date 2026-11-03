@@ -26,3 +26,14 @@ numero de WhatsApp: el contacto flotante lleva a los canales publicos verificado
 Antes del lanzamiento comercial: revision de productos y copys por ACEG, validacion
 de contactos, fotos definitivas y conexion del formulario al destino comercial elegido.
 La URL de Sites es una vista privada de revision; no reemplaza el dominio actual.
+
+## Video de portada
+
+Clip oficial: "Critical Communication B-roll", Motorola Solutions, 16.491 segundos.
+Fuente: https://video.motorolasolutions.com/detail/video/6302971659001
+Tambien utilizado en la pagina oficial de comunicaciones criticas de Motorola.
+El archivo se sirve localmente, con una version de menor resolucion para celulares.
+Reproduccion en loop, sin sonido y con control de pausa. Respeta movimiento reducido
+y ahorro de datos; pausa cuando la portada o la pestana no estan visibles.
+El poster permanece como respaldo si la reproduccion no esta disponible.
+Configuracion y procedencia: `src/data/media.ts` y `public/assets/sources.json`.

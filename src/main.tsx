@@ -4,7 +4,10 @@ import { BrowserRouter, Link, NavLink, Route, Routes, useLocation, useNavigate, 
 import { ArrowUpRight, ArrowRight, ArrowLeft, ChevronDown, ChevronRight, Check, Search, X, Menu, Radio, Network, Smartphone, Wrench, ShieldCheck, HardHat, Factory, Truck, Zap, HeartPulse, Users, MapPin, Phone, Mail, Clock3, MessageCircle, Plus, Minus, Signal, Globe2, Headphones, BatteryCharging, SlidersHorizontal, ExternalLink } from 'lucide-react';
 import { articles, categories, contact, industries, portfolio, products } from './data/content';
 import dealers from './data/dealers.json';
+import { HeroVideo } from './components/HeroVideo';
+import { heroVideo } from './data/media';
 import './styles.css';
+import './hero-video.css';
 
 const asset = (name: string) => `/assets/${name}`;
 const iconSet = [ShieldCheck, HardHat, Factory, Zap, Factory, Truck, HeartPulse, Users];
@@ -80,7 +83,27 @@ const slides = [
 function Hero() {
   const [active, setActive] = useState(0);
   const slide = slides[active];
-  return <section className="hero-section" aria-label="Destacados de ACEG"><div className="hero"><img className={`hero-image hero-image-${active}`} src={asset(slide.image)} alt={active === 0 ? 'Operador de seguridad utilizando un radio Motorola en una terminal' : active === 1 ? 'Centro de distribución y logística' : 'Personal trabajando en un entorno industrial'} fetchPriority="high" /><div className="hero-blue" /><div className="container hero-content" key={active}><Eyebrow light>{slide.eyebrow}</Eyebrow><h1>{slide.title}</h1><p>{slide.text}</p><Action to={slide.url} variant="white">{slide.cta}</Action><div className="hero-note"><span className="signal-dot" /> Personas + tecnología + respaldo</div></div><span className="hero-side-label">ACEG / CONECTADOS DESDE 1980</span><div className="hero-controls"><button className="icon-button" aria-label="Destacado anterior" onClick={() => setActive((active + 2) % 3)}><ArrowLeft size={18} /></button><span>0{active + 1}<i>/ 03</i></span><button className="icon-button" aria-label="Siguiente destacado" onClick={() => setActive((active + 1) % 3)}><ArrowRight size={18} /></button></div></div><div className="hero-tabs container" role="tablist" aria-label="Destacados">{slides.map((s, i) => <button key={s.label} role="tab" aria-selected={active === i} onClick={() => setActive(i)}><span>0{i + 1}</span>{s.label}<ArrowUpRight size={17} /></button>)}</div></section>;
+  return <section className="hero-section" aria-label="Destacados de ACEG">
+    <div className={`hero ${active === 0 ? 'hero-with-video' : ''}`}>
+      <img className={`hero-image hero-image-${active}`} src={active === 0 ? heroVideo.poster : asset(slide.image)} alt={active === 0 ? 'Personal operativo utilizando radios Motorola Solutions' : active === 1 ? 'Centro de distribución y logística' : 'Personal trabajando en un entorno industrial'} fetchPriority="high" />
+      {active === 0 && <HeroVideo />}
+      <div className="hero-blue" />
+      <div className="container hero-content" key={active}>
+        <Eyebrow light>{slide.eyebrow}</Eyebrow>
+        <h1>{slide.title}</h1>
+        <p>{slide.text}</p>
+        <Action to={slide.url} variant="white">{slide.cta}</Action>
+        <div className="hero-note"><span className="signal-dot" /> Personas + tecnología + respaldo</div>
+      </div>
+      <span className="hero-side-label">ACEG / CONECTADOS DESDE 1980</span>
+      <div className="hero-controls">
+        <button className="icon-button" aria-label="Destacado anterior" onClick={() => setActive((active + 2) % 3)}><ArrowLeft size={18} /></button>
+        <span>0{active + 1}<i>/ 03</i></span>
+        <button className="icon-button" aria-label="Siguiente destacado" onClick={() => setActive((active + 1) % 3)}><ArrowRight size={18} /></button>
+      </div>
+    </div>
+    <div className="hero-tabs container" role="tablist" aria-label="Destacados">{slides.map((s, i) => <button key={s.label} role="tab" aria-selected={active === i} onClick={() => setActive(i)}><span>0{i + 1}</span>{s.label}<ArrowUpRight size={17} /></button>)}</div>
+  </section>;
 }
 function Stats() {
   return <div className="stats-band"><div className="container stats"><div><strong>+40<span>años</span></strong><p>de experiencia en Argentina</p></div><div><strong>+100</strong><p>distribuidores en nuestra red</p></div><div><strong>20<span>provincias</span></strong><p>con presencia de dealers</p></div><div className="stat-support"><Network size={29} /><span>Ingeniería y respaldo<strong>En cada etapa del proyecto.</strong></span></div></div></div>;
